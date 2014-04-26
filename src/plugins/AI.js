@@ -99,7 +99,8 @@ game.module(
 
                     vector *= max;
                 }
-            }
+            },
+
 
 
         })

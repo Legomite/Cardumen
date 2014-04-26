@@ -10,22 +10,34 @@ game.module(
 
         Cardumen = game.Class.extend({
             _speed: 50,
+            id: 0,
             init: function () {
-                var x = Math.random() * (game.system.width);
-                var y = Math.random() * (game.system.width - 100) + 100;
-                this.sprite = new game.Sprite(48, 16, 'media/images/cardumentest.png');
+                var x = Math.random() * (game.system.width - 50 - 100) + 100;
+                var y = Math.random() * (game.system.width - 50 - 100) + 100;
+                //   console.log("X : " + x + "\nY: " + y);
+                this.sprite = new game.Sprite('player');
+                this.sprite.position.x = x;
+                this.sprite.position.y = y;
+                this.sprite.anchor.set(0, 0.5);
+
                 this.AI = new game.SteeringBehavior();
-                var shape = new game.Rectangle(48, 16);
+                var shape = new game.Rectangle(32, 11);
                 this.body = new game.Body();
-                this.body.collideAgainst = 1;
+                this.body.collideAgainst = 1 | 2;
+
                 this.body.collisionGroup = 0;
+                this.body.position.x = x;
+                this.body.position.y = y;
                 this.body.addShape(shape);
+                this.body.collide = this.collide.bind(this);
+
                 game.scene.world.addBody(this.body);
-                game.scene.ObjectsContainer.addChild(this.sprite);
+                game.scene.cardumenContainer.addChild(this.sprite);
 
             },
             collide: function () {
                 // console.log("colision bot");
+                game.scene.cardumenPool.splice(this.id);
                 game.scene.world.removeBody(this);
                 game.scene.cardumenContainer.removeChild(this.sprite);
                 game.scene.removeObject(this);
@@ -37,14 +49,20 @@ game.module(
 
             },
             update: function () {
+
+                this.last = this.body.last;
+
+                this.behavior();
+
                 this.flip();
                 // console.log("velocity y: " + this.body.velocity.y);
+                this.sprite.rotation = this.body.rotation;
                 this.sprite.position.x = this.body.position.x;
                 this.sprite.position.y = this.body.position.y;
                 if (this.sprite.position.y < 0) {
 
                     game.scene.world.removeBody(this.body);
-                    game.scene.ObjectsContainer.removeChild(this.sprite);
+                    game.scene.cardumenContainer.removeChild(this.sprite);
                     game.scene.removeObject(this);
 
                 }
@@ -57,12 +75,76 @@ game.module(
 
                 } else {
                     if (this.body.velocity.x < 0) {
-                        this.sprite.scale.x = -1;
+                        this.sprite.scale.x = 1;
                     }
                 }
+                if (this.last && this.seeking) {
+                    var temp = (this.body.position.y - this.last.y) / (this.body.position.x - this.last.x);
+                    this.body.rotation = temp;
+                }
+
+
 
             },
+            behavior: function () {
+                var temp;
+                /*= new game.Body();
+              //  temp.position.x = 99999;
+                temp.position.y = 99999;*/
+                for (var i = 0; i < game.scene.commandPool.length; i++) {
+                    if (temp) {
+                        if (this.body.position.distance(game.scene.commandPool[i].body.position) < this.body.position.distance(temp.position)) {
+                            temp = game.scene.commandPool[i].body;
+                        }
+                    } else {
+                        temp = game.scene.commandPool[i].body;
+                    }
+                }
+                if (temp) {
+                    this.seeking = true;
+                    this.AI.seek(this.body, temp, this._speed);
+                } else {
+                    this.body.velocity.multiply(1);
+                    this.seeking = false;
+                }
+            }
 
 
-        })
+        });
+
+        Command = game.Class.extend({
+            id: 0,
+            init: function (global) {
+                var x = global.x;
+                var y = global.y;
+                this.sprite = new game.Sprite('command');
+                this.sprite.position.x = x;
+                this.sprite.position.y = y;
+
+                this.AI = new game.SteeringBehavior();
+                var shape = new game.Rectangle(48, 16);
+                this.body = new game.Body();
+                this.body.collideAgainst = 0;
+                this.body.collisionGroup = 1;
+                this.body.position.x = x;
+                this.body.position.y = y;
+                this.body.addShape(shape);
+                this.body.collide = this.collide.bind(this);
+                game.scene.world.addBody(this.body);
+                game.scene.commandContainter.addChild(this.sprite);
+            },
+            collide: function () {
+                // console.log("colision bot");
+                game.scene.commandPool.splice(this.id);
+                game.scene.world.removeBody(this);
+                game.scene.commandContainter.removeChild(this.sprite);
+                game.scene.removeObject(this);
+
+
+                // game.scene.interactive.addScore(this.value);
+
+                game.scene.world.removeBodyCollision(this.body);
+
+            },
+        });
     });

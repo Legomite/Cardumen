@@ -8,5 +8,7 @@ game.module(
         // Sprites
         // game.addAsset('media/player1.png');
         // game.addAsset('media/obstacle.png');
-        game.addAsset('media/images/cardumentest.png');
+        game.addAsset('images/cardumentest.png', 'player');
+        game.addAsset('images/command.png', 'command');
+        // game.addAsset('media/images/cardumentest.png', 'player');
     });

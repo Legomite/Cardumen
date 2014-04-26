@@ -1,9 +1,9 @@
 game.module(
-        'game.world.actors.player',
-        'plugins.AI'
+        'game.world.actors.player'
         )
         .require(
-                'engine.physics'
+                'engine.physics',
+                'plugins.AI'
                 )
         .body(function() {
             PenguinBot = game.Class.extend({
@@ -12,8 +12,10 @@ game.module(
                 init: function() {
                     this.position = {x: game.system.width / 2, y: 100};
                     this.sprite = new game.Sprite('1', 'Box.png');
+                    this.steeringB = new game.SteeringBehavior();
                     this.sprite.position.set(this.position.x, this.position.y);
                     game.scene.stage.addChild(this.sprite);
+                    game.scene.addObject(this);
                     this.body = new game.Body({
                         position: {
                             x: this.position.x,
@@ -32,10 +34,10 @@ game.module(
                     game.scene.world.addBody(this.body);
                 },
                 update: function() {
+                    //console.log("updating");
                     this.sprite.position.x = this.body.position.x;
                     this.sprite.position.y = this.body.position.y;
-                    var steeringB = new SteeringBehavior();
-                    steeringB.seek(this.body, game.victimSample.body, 10);
+                    this.steeringB.seek(this.body, game.scene.victimSample.body, 80);
                 }
             });
 
@@ -47,6 +49,7 @@ game.module(
                     this.sprite = new game.Sprite('2', 'Box_Yellow.png');
                     this.sprite.position.set(this.position.x, this.position.y);
                     game.scene.stage.addChild(this.sprite);
+                    game.scene.addObject(this);
                     this.body = new game.Body({
                         position: {
                             x: this.position.x,

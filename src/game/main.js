@@ -12,7 +12,7 @@ game.module(
             SceneGame = game.Scene.extend({
                 backgroundColor: 0xb9bec7,
                 init: function() {
-                    this.world = new game.World(0, 2000);
+                    this.world = new game.World();
                     this.victimSample = new VictimSample();
                     this.penguinBot = new PenguinBot();
                 }

@@ -1,21 +1,23 @@
 game.module(
-    'game.main'
-)
-.body(function() {
+        'game.main'
+        ).require(
+        'engine.scene',
+        'game.world.actors.player',
+        'plugins.AI'
+        )
+        .body(function() {
 
-game.addAsset('logo.png');
+            game.addAsset('Box.png', '1');
+            game.addAsset('Box_Yellow.png', '2');
+            SceneGame = game.Scene.extend({
+                backgroundColor: 0xb9bec7,
+                init: function() {
+                    this.world = new game.World(0, 2000);
+                    this.victimSample = new VictimSample();
+                    this.penguinBot = new PenguinBot();
+                }
+            });
 
-SceneGame = game.Scene.extend({
-    backgroundColor: 0xb9bec7,
+            game.start();
 
-    init: function() {
-        var logo = new game.Sprite('logo.png');
-        logo.anchor.set(0.5, 0.5);
-        logo.position.set(game.system.width / 2, game.system.height / 2);
-        this.stage.addChild(logo);
-    }
-});
-
-game.start();
-
-});
+        });

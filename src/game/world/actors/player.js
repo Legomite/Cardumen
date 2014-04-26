@@ -13,9 +13,15 @@ game.module(
             init: function () {
                 var x = Math.random() * (game.system.width);
                 var y = Math.random() * (game.system.width - 100) + 100;
-                this.sprite = new game.Sprite(160, 32, 'media/images/cardumentest.png');
+                this.sprite = new game.Sprite(48, 16, 'media/images/cardumentest.png');
                 this.AI = new game.SteeringBehavior();
-
+                var shape = new game.Rectangle(48, 16);
+                this.body = new game.Body();
+                this.body.collideAgainst = 1;
+                this.body.collisionGroup = 0;
+                this.body.addShape(shape);
+                game.scene.world.addBody(this.body);
+                game.scene.ObjectsContainer.addChild(this.sprite);
 
             },
             collide: function () {

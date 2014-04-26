@@ -21,11 +21,8 @@ game.module(
             //Add container to stage
             this.stage.addChild(this.cardumenContainer);
             this.stage.addChild(this.objectContainer);
-
-
-
-
-
+            //add cardumens to the world
+            this.addCardumens();
         },
         addCardumens: function () {
             for (var i = 0; i < this.cardumen_number; i++) {

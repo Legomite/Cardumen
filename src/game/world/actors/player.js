@@ -10,7 +10,7 @@ game.module(
                 position: {x: 0, y: 0},
                 vel: 0,
                 init: function() {
-                    this.position = {x: game.system.width / 2, y: 100};
+                    this.position = {x: 100, y: game.system.height / 2};
                     this.sprite = new game.Sprite('1', 'Box.png');
                     this.steeringB = new game.SteeringBehavior();
                     this.sprite.position.set(this.position.x, this.position.y);
@@ -32,12 +32,17 @@ game.module(
                     var shape = new game.Rectangle(64, 64);
                     this.body.addShape(shape);
                     game.scene.world.addBody(this.body);
+
                 },
                 update: function() {
-                    //console.log("updating");
+                    
+                    //this.addTimer(2000, function() {
+                    console.log("VALORES x,y "+this.body.position.x+","+this.body.position.y);
+       
+                    //}, true);
                     this.sprite.position.x = this.body.position.x;
                     this.sprite.position.y = this.body.position.y;
-                    this.steeringB.seek(this.body, game.scene.victimSample.body, 80);
+                    this.steeringB.seekSin(this.body, game.scene.victimSample.body,1,30,60);
                 }
             });
 
@@ -45,7 +50,7 @@ game.module(
                 position: {x: 0, y: 0},
                 vel: 0,
                 init: function() {
-                    this.position = {x: (game.system.width / 2) + 50, y: 500};
+                    this.position = {x: 600, y: game.system.height / 2};
                     this.sprite = new game.Sprite('2', 'Box_Yellow.png');
                     this.sprite.position.set(this.position.x, this.position.y);
                     game.scene.stage.addChild(this.sprite);

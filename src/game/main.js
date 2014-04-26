@@ -13,6 +13,7 @@ game.module(
                 backgroundColor: 0xb9bec7,
                 init: function() {
                     this.world = new game.World();
+                    this.world.mass=0;
                     this.victimSample = new VictimSample();
                     this.penguinBot = new PenguinBot();
                 }

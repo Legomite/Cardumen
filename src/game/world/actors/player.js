@@ -3,7 +3,8 @@ game.module(
         )
         .require(
                 'engine.physics',
-                'plugins.AI'
+                'plugins.AI',
+                'game.world.actors.Behaviors'
                 )
         .body(function() {
             PenguinBot = game.Class.extend({
@@ -13,6 +14,7 @@ game.module(
                     this.position = {x: 100, y: game.system.height / 2};
                     this.sprite = new game.Sprite('1', 'Box.png');
                     this.steeringB = new game.SteeringBehavior();
+                    this.behavior = new Behaviors();
                     this.sprite.position.set(this.position.x, this.position.y);
                     game.scene.stage.addChild(this.sprite);
                     game.scene.addObject(this);
@@ -35,14 +37,17 @@ game.module(
 
                 },
                 update: function() {
-                    
+
                     //this.addTimer(2000, function() {
-                    console.log("VALORES x,y "+this.body.position.x+","+this.body.position.y);
-       
+                    console.log("VALORES x,y " + this.body.position.x + "," + this.body.position.y);
+                    //2*sin10x
+                    //this.body.position.y =game.system.height / 2 + (60 * Math.sin(0.2*this.body.position.x));
+                   // this.body.position.x = 5 + this.body.position.x;
                     //}, true);
                     this.sprite.position.x = this.body.position.x;
                     this.sprite.position.y = this.body.position.y;
-                    this.steeringB.seekSin(this.body, game.scene.victimSample.body,1,30,60);
+                    this.behavior.sinBehavior(this.body,game.scene.victimSample.body,game.system.height / 2,this.steeringB,60,0.20);
+                    //this.steeringB.seek(this.body, game.scene.victimSample.body, 25);
                 }
             });
 

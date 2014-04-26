@@ -30,7 +30,7 @@ game.module(
                         collideAgainst: 1,
                         collisionGroup: 0
                     });
-                    //this.body.collide = this.collide.bind(this);
+                    this.body.collide = this.collide.bind(this);
                     var shape = new game.Rectangle(64, 64);
                     this.body.addShape(shape);
                     game.scene.world.addBody(this.body);
@@ -39,15 +39,19 @@ game.module(
                 update: function() {
 
                     //this.addTimer(2000, function() {
-                    console.log("VALORES x,y " + this.body.position.x + "," + this.body.position.y);
+                    //console.log("VALORES x,y " + this.body.position.x + "," + this.body.position.y);
                     //2*sin10x
                     //this.body.position.y =game.system.height / 2 + (60 * Math.sin(0.2*this.body.position.x));
-                   // this.body.position.x = 5 + this.body.position.x;
+                    // this.body.position.x = 5 + this.body.position.x;
                     //}, true);
                     this.sprite.position.x = this.body.position.x;
                     this.sprite.position.y = this.body.position.y;
-                    this.behavior.sinBehavior(this.body,game.scene.victimSample.body,game.system.height / 2,this.steeringB,60,0.20);
-                    //this.steeringB.seek(this.body, game.scene.victimSample.body, 25);
+                    this.behavior.sinBehavior(this.body,game.system.height / 2, 50, 60, 0.10);
+                },
+                collide: function() {
+                    console.log("collide");
+                    //this.body.mass = 0;
+                    //return true;
                 }
             });
 

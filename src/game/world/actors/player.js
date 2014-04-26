@@ -6,4 +6,11 @@ game.module(
 )
     .body(function () {
 
+        Cardumen = game.Class.extend({
+            _speed:50,
+            init: function(){
+
+            }
+
+
     })

@@ -23,21 +23,28 @@ game.module(
                 this.AI = new game.SteeringBehavior();
                 var shape = new game.Rectangle(32, 11);
                 this.body = new game.Body();
-                this.body.collideAgainst = 1 | 2;
+
 
                 this.body.collisionGroup = 0;
+                this.body.collideAgainst = 1;
                 this.body.position.x = x;
                 this.body.position.y = y;
                 this.body.addShape(shape);
                 this.body.collide = this.collide.bind(this);
-
+                this.solver = new game.CollisionSolver();
                 game.scene.world.addBody(this.body);
                 game.scene.cardumenContainer.addChild(this.sprite);
 
             },
             collide: function () {
-                // console.log("colision bot");
-                game.scene.cardumenPool.splice(this.id);
+                console.log("colision bot");
+                var i, b;
+                for (i = game.scene.cardumenPool.length - 1; i >= 0; i--) {
+                    if (game.scene.cardumenPool[i].id = this.id) break;
+                    b = game.scene.cardumenPool[i].body;
+                    this.solver.hitResponse(this.body, b);
+                }
+                game.scene.cardumenPool.erase(this);
                 game.scene.world.removeBody(this);
                 game.scene.cardumenContainer.removeChild(this.sprite);
                 game.scene.removeObject(this);
@@ -46,6 +53,9 @@ game.module(
                 // game.scene.interactive.addScore(this.value);
 
                 game.scene.world.removeBodyCollision(this.body);
+
+            },
+            afterCollide: function () {
 
             },
             update: function () {
@@ -78,16 +88,16 @@ game.module(
                         this.sprite.scale.x = 1;
                     }
                 }
-                if (this.last && this.seeking) {
+                /*if (this.last && this.seeking) {
                     var temp = (this.body.position.y - this.last.y) / (this.body.position.x - this.last.x);
                     this.body.rotation = temp;
-                }
+                }*/
 
 
 
             },
             behavior: function () {
-                var temp;
+                var temp, temp2;
                 /*= new game.Body();
               //  temp.position.x = 99999;
                 temp.position.y = 99999;*/
@@ -103,10 +113,29 @@ game.module(
                 if (temp) {
                     this.seeking = true;
                     this.AI.seek(this.body, temp, this._speed);
+
                 } else {
-                    this.body.velocity.multiply(1);
+
                     this.seeking = false;
                 }
+                for (var i = 0; i < game.scene.cardumenPool.length; i++) {
+                    if (temp2) {
+                        if (this.body.position.distance(game.scene.cardumenPool[i].body.position) < this.body.position.distance(temp2.position) && game.scene.cardumenPool[i].id !== this.id) {
+                            temp2 = game.scene.cardumenPool[i].body;
+
+                        }
+                        if (this.body.position.distance(temp2.position) < 20) {
+                            this.body.velocity = {
+                                x: 0,
+                                y: 0
+                            }
+                        }
+                    } else {
+                        temp2 = game.scene.cardumenPool[i].body;
+                    }
+                }
+
+
             }
 
 
@@ -121,7 +150,7 @@ game.module(
                 this.sprite.position.x = x;
                 this.sprite.position.y = y;
 
-                this.AI = new game.SteeringBehavior();
+                //this.AI = new game.SteeringBehavior();
                 var shape = new game.Rectangle(48, 16);
                 this.body = new game.Body();
                 this.body.collideAgainst = 0;
@@ -134,8 +163,8 @@ game.module(
                 game.scene.commandContainter.addChild(this.sprite);
             },
             collide: function () {
-                // console.log("colision bot");
-                game.scene.commandPool.splice(this.id);
+                //  console.log("colision bot :" + this.id);
+                game.scene.commandPool.erase(this);
                 game.scene.world.removeBody(this);
                 game.scene.commandContainter.removeChild(this.sprite);
                 game.scene.removeObject(this);
@@ -146,5 +175,8 @@ game.module(
                 game.scene.world.removeBodyCollision(this.body);
 
             },
+            update: function () {
+                // console.log("size of command :" + game.scene.commandPool.length);
+            }
         });
     });

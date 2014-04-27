@@ -10,9 +10,9 @@ game.module(
         // game.Debug.enabled = false;
         //  game.System.idtkScale = 'ScaleAspectFit';
         var w = (window.innerWidth < 640) ? 640 : 768;
-        var h = (window.innerHeight < 1024) ? 1024 : window.innerHeight;
+        var h = (window.innerHeight < 800) ? 1024 : window.innerHeight;
         // game.addAsset('cardumentest.png', 'player');
-        game.start(sceneTest, h, w);
+        game.start(sceneTest, 800, 600);
         //game.addAsset('cardumentest.png');
         /*
         SceneGame = game.Scene.extend({

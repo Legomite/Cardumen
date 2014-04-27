@@ -11,7 +11,7 @@ game.module(
     sceneTest = game.Scene.extend({
 
         backgroundColor: 0x55dff8,
-        cardumen_number: 50,
+        cardumen_number: 5,
         init: function () {
             //Add world
             this.world = new game.World();

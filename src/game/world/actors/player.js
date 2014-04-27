@@ -13,8 +13,8 @@ game.module(
             id: 0,
             init: function () {
                 var x = Math.random() * (game.system.width - 50 - 100) + 100;
-                var y = Math.random() * (game.system.width - 50 - 100) + 100;
-                //   console.log("X : " + x + "\nY: " + y);
+                var y = Math.random() * (game.system.height - 50 - 100) + 100;
+                console.log("X : " + x + "\nY: " + y);
                 this.sprite = new game.Sprite('player');
                 this.sprite.position.x = x;
                 this.sprite.position.y = y;
@@ -23,28 +23,26 @@ game.module(
                 this.AI = new game.SteeringBehavior();
                 var shape = new game.Rectangle(32, 11);
                 this.body = new game.Body();
-
+                /* this.body.velocity = {
+                    x: 0,
+                    y: 0
+                }*/
 
                 this.body.collisionGroup = 0;
-                this.body.collideAgainst = 1;
+                // this.body.collideAgainst = 0;
                 this.body.position.x = x;
                 this.body.position.y = y;
                 this.body.addShape(shape);
-                this.body.collide = this.collide.bind(this);
-                this.solver = new game.CollisionSolver();
+                //  this.body.collide = this.collide.bind(this);
+
                 game.scene.world.addBody(this.body);
                 game.scene.cardumenContainer.addChild(this.sprite);
 
             },
-            collide: function () {
-                console.log("colision bot");
-                var i, b;
-                for (i = game.scene.cardumenPool.length - 1; i >= 0; i--) {
-                    if (game.scene.cardumenPool[i].id = this.id) break;
-                    b = game.scene.cardumenPool[i].body;
-                    this.solver.hitResponse(this.body, b);
-                }
-                game.scene.cardumenPool.erase(this);
+            //     collide: function () {
+            //          console.log("colision bot");
+
+            /*   game.scene.cardumenPool.erase(this);
                 game.scene.world.removeBody(this);
                 game.scene.cardumenContainer.removeChild(this.sprite);
                 game.scene.removeObject(this);
@@ -52,14 +50,13 @@ game.module(
 
                 // game.scene.interactive.addScore(this.value);
 
-                game.scene.world.removeBodyCollision(this.body);
+                game.scene.world.removeBodyCollision(this.body);*/
 
-            },
+            //  },
             afterCollide: function () {
 
             },
             update: function () {
-
                 this.last = this.body.last;
 
                 this.behavior();
@@ -80,13 +77,21 @@ game.module(
 
             },
             flip: function () {
+
                 if (this.body.velocity.x > 0) {
                     this.sprite.scale.x = -1;
 
                 } else {
                     if (this.body.velocity.x < 0) {
+
                         this.sprite.scale.x = 1;
                     }
+                }
+                if (this.body.position.x < 50 || this.body.position.x > game.system.width - 50) {
+                    this.body.velocity.x *= -1;
+                }
+                if (this.body.position.y < 50 || this.body.position.y > game.system.height - 50) {
+                    this.body.velocity.y *= -1;
                 }
                 /*if (this.last && this.seeking) {
                     var temp = (this.body.position.y - this.last.y) / (this.body.position.x - this.last.x);

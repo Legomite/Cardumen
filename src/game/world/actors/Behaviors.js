@@ -4,16 +4,34 @@ game.module(
         'engine.physics',
         'plugins.AI'
         ).body(function() {
-            Behaviors = game.Class.extend({
-                sinBehavior: function(ChaserBody,initialY,multFactor,amplitude,frequency){
-                    //ChaserBody.position.x+=2;
-                    ChaserBody.position.y =initialY+ (amplitude * Math.sin(frequency*ChaserBody.position.x));
-                    //steeringBehavior.seek(ChaserBody,victimBody,25);
-                   /* var temp = ChaserBody.position.clone();
-                    temp.subtract(600,600);
-                    temp.normalize();
-                    temp.multiply(25);*/
-                    ChaserBody.velocity = multFactor;
-                }
-            });
+    Behaviors = game.Class.extend({
+        sinBehavior: function(chaserBody, initialY, velFactor, amplitude, frequency) {
+            chaserBody.position.y = initialY + (amplitude * Math.sin(frequency * chaserBody.position.x));
+            if (chaserBody.last) {
+                var temp = (chaserBody.position.y - chaserBody.last.y) / (chaserBody.position.x - chaserBody.last.x);
+                chaserBody.rotation = (Math.atan(temp));
+            }
+            chaserBody.velocity = velFactor;
+        },
+        paralBehavior: function(chaserBody, velFactor, a, b, c, iniX, deepLvl) {
+            var discriminante = Math.sqrt(Math.pow(b, 2) - (4 * a * c));
+            var point2 = ((-b + discriminante) / 2) + iniX;
+            //var point1 = (-b - discriminante) / 2 + iniX;
+            var positionV = {x: -(b / 2) + iniX, y: -((Math.pow(b, 2) - (4 * a * c)) / 4)+deepLvl};
+            //var left = point1 - chaserBody.position.x;
+            
+            if (chaserBody.position.x >= positionV.x) {
+
+                chaserBody.position.x += 1;
+                chaserBody.position.y -= 5;
+            }
+            chaserBody.velocity = velFactor;
+            if (chaserBody.last) {
+             var temp = (chaserBody.position.y - chaserBody.last.y) / (chaserBody.position.x - chaserBody.last.x);
+             chaserBody.rotation = Math.atan(temp);
+             
+             }
+
+        }
+    });
 });

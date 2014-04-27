@@ -15,10 +15,11 @@ game.module(
                     this.world = new game.World();
                     this.world.mass=0;
                     this.victimSample = new VictimSample();
-                    this.penguinBot = new PenguinBot();
+                    this.birdBot = new BirdBot();
+                    //this.penguinBot = new PenguinBot();
                 }
             });
 
-            game.start();
+            game.start(SceneGame,800,600);
 
         });

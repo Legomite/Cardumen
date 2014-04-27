@@ -79,7 +79,7 @@ game.module(
                 update: function() {
                     this.sprite.position.x = this.body.position.x;
                     this.sprite.position.y = this.body.position.y;
-                    this.behavior.paralBehavior(this.body, 125, 0.10, -4, 3,300,300);
+                    this.behavior.paralBehavior(this.body, 125,  250);
                     this.sprite.rotation = this.body.rotation;
                 },
                 collide: function() {

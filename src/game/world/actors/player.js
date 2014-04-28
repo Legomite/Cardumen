@@ -9,12 +9,12 @@ game.module(
     .body(function () {
 
         Cardumen = game.Class.extend({
-            _speed: 50,
+            _speed: 100,
             id: 0,
             init: function () {
                 var x = Math.random() * (game.system.width - 50 - 100) + 100;
                 var y = Math.random() * (game.system.height - 50 - 100) + 100;
-                console.log("X : " + x + "\nY: " + y);
+                // console.log("X : " + x + "\nY: " + y);
                 this.sprite = new game.Sprite('player');
                 this.sprite.position.x = x;
                 this.sprite.position.y = y;
@@ -23,40 +23,42 @@ game.module(
                 this.AI = new game.SteeringBehavior();
                 var shape = new game.Rectangle(32, 11);
                 this.body = new game.Body();
-                /* this.body.velocity = {
-                    x: 0,
-                    y: 0
-                }*/
+
+
+
 
                 this.body.collisionGroup = 0;
-                // this.body.collideAgainst = 0;
+                this.body.collideAgainst = 2;
                 this.body.position.x = x;
                 this.body.position.y = y;
                 this.body.addShape(shape);
-                //  this.body.collide = this.collide.bind(this);
+                this.body.collide = this.collide.bind(this);
+
 
                 game.scene.world.addBody(this.body);
                 game.scene.cardumenContainer.addChild(this.sprite);
 
             },
-            //     collide: function () {
-            //          console.log("colision bot");
+            collide: function () {
+                //console.log("colision bot");
 
-            /*   game.scene.cardumenPool.erase(this);
+                game.scene.cardumenPool.erase(this);
                 game.scene.world.removeBody(this);
                 game.scene.cardumenContainer.removeChild(this.sprite);
                 game.scene.removeObject(this);
-
-
+                game.scene.world.removeBodyCollision(this.body);
+                game.scene.removeLeft();
                 // game.scene.interactive.addScore(this.value);
 
-                game.scene.world.removeBodyCollision(this.body);*/
 
-            //  },
+
+            },
             afterCollide: function () {
 
             },
             update: function () {
+                /*this.body.position.x = (this.body.position.x === 0) ? 300 : this.body.position.x;
+                this.body.position.y = (this.body.position.y === 0) ? 300 : this.body.position.y;*/
                 this.last = this.body.last;
 
                 this.behavior();
@@ -77,7 +79,30 @@ game.module(
 
             },
             flip: function () {
+                var distance = 8;
+                for (var i = 0; i < game.scene.cardumenPool.length; i++) {
+                    if (this.body.position.distance(game.scene.cardumenPool[i].body.position) < 20 && game.scene.cardumenPool[i].id !== this.id) {
+                        //   console.log("najarse");
+                        if (this.body.position.x > game.scene.cardumenPool[i].body.position.x) {
+                            this.body.position.x += distance;
+                            game.scene.cardumenPool[i].body.position.x -= distance;
+                        } else {
+                            this.body.position.x -= distance;
+                            game.scene.cardumenPool[i].body.position.x += distance;
+                        }
+                        if (this.body.position.y > game.scene.cardumenPool[i].body.position.y) {
+                            this.body.position.y += distance;
+                            game.scene.cardumenPool[i].body.position.y -= distance;
+                        } else {
+                            this.body.position.y -= distance;
+                            game.scene.cardumenPool[i].body.position.y += distance;
+                        }
 
+
+
+                        //this.body.position.multiply(1.2);
+                    }
+                }
                 if (this.body.velocity.x > 0) {
                     this.sprite.scale.x = -1;
 
@@ -87,16 +112,18 @@ game.module(
                         this.sprite.scale.x = 1;
                     }
                 }
-                if (this.body.position.x < 50 || this.body.position.x > game.system.width - 50) {
+                if (this.body.position.x < 50 && this.body.velocity.x < 0 || this.body.position.x > game.system.width - 50 && this.body.velocity.x > 0) {
                     this.body.velocity.x *= -1;
                 }
-                if (this.body.position.y < 50 || this.body.position.y > game.system.height - 50) {
+                if (this.body.position.y < 50 && this.body.velocity.y < 0 || this.body.position.y > game.system.height - 50 && this.body.velocity.y > 0) {
                     this.body.velocity.y *= -1;
                 }
                 /*if (this.last && this.seeking) {
                     var temp = (this.body.position.y - this.last.y) / (this.body.position.x - this.last.x);
                     this.body.rotation = temp;
                 }*/
+
+
 
 
 
@@ -117,7 +144,10 @@ game.module(
                 }
                 if (temp) {
                     this.seeking = true;
+                    // this.body.collideAgainst = 0;
                     this.AI.seek(this.body, temp, this._speed);
+
+                    //this.AI.chase(this.body, temp, 1, 1);
 
                 } else {
 
@@ -149,8 +179,26 @@ game.module(
         Command = game.Class.extend({
             id: 0,
             init: function (global) {
-                var x = global.x;
-                var y = global.y;
+                var x, y;
+                var distance = 100;
+                if (global) {
+                    if (global.x < distance) {
+                        x = (global.x < distance) ? distance : global.x;
+                    } else {
+                        x = (global.x > game.system.width - distance) ? game.system.width - distance : global.x;
+                    }
+                    if (global.y < distance) {
+                        y = (global.y < distance) ? distance : global.y;
+                    } else {
+                        y = (global.y > game.system.height - distance) ? game.system.height - distance : global.y;
+                    }
+
+
+                } else {
+                    var x = Math.random() * (game.system.width - distance - distance) + distance;
+                    var y = Math.random() * (game.system.height - distance - distance) + distance;
+                }
+                //console.log("X : " + x + "\nY : " + y);
                 this.sprite = new game.Sprite('command');
                 this.sprite.position.x = x;
                 this.sprite.position.y = y;
@@ -168,7 +216,15 @@ game.module(
                 game.scene.commandContainter.addChild(this.sprite);
             },
             collide: function () {
-                //  console.log("colision bot :" + this.id);
+                // console.log("colision bot :" + this.id);
+                /* for (var i = 0; i < game.scene.cardumenPool.length; i++) {
+                    game.scene.cardumenPool[i].body.velocity = {
+                        x: Math.random() * (1),
+                        y: Math.random() * (1)
+                    }
+                    console.log("X :" + game.scene.cardumenPool[i].body.velocity.x);
+                    console.log("Y :" + game.scene.cardumenPool[i].body.velocity.y);
+                }*/
                 game.scene.commandPool.erase(this);
                 game.scene.world.removeBody(this);
                 game.scene.commandContainter.removeChild(this.sprite);

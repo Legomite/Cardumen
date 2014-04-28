@@ -259,23 +259,27 @@ game.module(
                     // TODO can this be optimized?
                     if (a.last.y + a.shape.height / 2 <= b.last.y - b.shape.height / 2) {
                         if (a.collide(b)) {
-                            console.log(a + " = " + b);
+                            // console.log(a + " = " + b);
                             a.position.y = b.position.y - b.shape.height / 2 - a.shape.height / 2;
+                            a.position.y-=2;
                             return true;
                         }
                     } else if (a.last.y - a.shape.height / 2 >= b.last.y + b.shape.height / 2) {
                         if (a.collide(b)) {
                             a.position.y = b.position.y + b.shape.height / 2 + a.shape.height / 2;
+                            a.position.y+=2;
                             return true;
                         }
                     } else if (a.last.x + a.shape.width / 2 <= b.last.x - b.shape.width / 2) {
                         if (a.collide(b)) {
                             a.position.x = b.position.x - b.shape.width / 2 - a.shape.width / 2;
+                             a.position.x-=2;
                             return true;
                         }
                     } else if (a.last.x - a.shape.width / 2 >= b.last.x + b.shape.width / 2) {
                         if (a.collide(b)) {
                             a.position.x = b.position.x + b.shape.width / 2 + a.shape.width / 2;
+                             a.position.x+=2;
                             return true;
                         }
                     }

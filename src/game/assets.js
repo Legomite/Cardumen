@@ -9,6 +9,9 @@ game.module(
         // game.addAsset('media/player1.png');
         // game.addAsset('media/obstacle.png');
         game.addAsset('images/cardumentest.png', 'player');
+        game.addAsset('images/penguin.png', 'penguin');
         game.addAsset('images/command.png', 'command');
+        game.addAsset('images/Box.png', 'box');
+        game.addAsset('font.fnt');
         // game.addAsset('media/images/cardumentest.png', 'player');
     });
